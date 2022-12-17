@@ -13,6 +13,6 @@ type ErrorDto struct {
 
 type SuccessDto struct {
 	Code    int         `json:"code"`
-	Message string      `json:"message"`
+	Message string      `json:"message,omitempty"`
 	Data    interface{} `json:"info,omitempty"`
 }

@@ -32,9 +32,8 @@ func (useCase *AdminEventUseCase) Execute(c *gin.Context, event string) dto.Even
 	return dto.EventAdminDto{
 		Status: "success",
 		Response: dto.SuccessDto{
-			Code:    200,
-			Message: "sucess",
-			Data:    jsonParsed,
+			Code: 200,
+			Data: jsonParsed,
 		},
 	}
 }
