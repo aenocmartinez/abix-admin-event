@@ -61,7 +61,7 @@ func (s *SubscriberDao) FindByName(name string) domain.Subscriber {
 	cad.WriteString("SELECT name, server FROM subscribers WHERE name = ?")
 	row := s.db.Source().Conn().QueryRow(cad.String(), name)
 	row.Scan(&name, &server)
-	subscriber = *domain.NewSubscriber(name, server)
+	subscriber = *domain.NewSubscriber(name).WithServer(server)
 
 	return subscriber
 }
@@ -81,7 +81,7 @@ func (s *SubscriberDao) AllSubscribers() []domain.Subscriber {
 		var name, server string
 		rows.Scan(&name, &server)
 
-		subscribers = append(subscribers, *domain.NewSubscriber(name, server))
+		subscribers = append(subscribers, *domain.NewSubscriber(name).WithServer(server))
 	}
 
 	return subscribers

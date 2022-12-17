@@ -11,19 +11,18 @@ func main() {
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
 
+	// Subscriber
 	r.GET("/abix360/admin-event/v1/subscribers", controller.ListSubscribers)
-	r.POST("/abix360/admin-event/v1/subscribers/create", controller.CreateSubscriber)
-	r.DELETE("/abix360/admin-event/v1/subscribers/:name", controller.DeleteSubscriber)
-	r.GET("/abix360/admin-event/v1/subscribers/:name", controller.FindSubscriber)
+	r.POST("/abix360/admin-event/v1/subscriber", controller.CreateSubscriber)
+	r.DELETE("/abix360/admin-event/v1/subscriber/:name", controller.DeleteSubscriber)
+	r.GET("/abix360/admin-event/v1/subscriber/:name", controller.FindSubscriber)
 
-	// routes := r.Group("/abix360/v1", validateHeader(), abixjwt.AuthorizeJWT())
-	// {
-	// 	routes.POST("/logout", controller.Logout)
-	// 	routes.PUT("/reset-password", controller.ResetPassword)
-	// 	routes.PUT("/update-info-personal", controller.UpdateInfoPersonal)
-	// 	routes.GET("/user/:id", controller.FindUser)
-	// 	routes.GET("/unsuscribe/:id", controller.UnsuscribeUser)
-	// }
+	// Events
+	r.GET("/abix360/admin-event/v1/events", controller.ListEvents)
+	r.POST("/abix360/admin-event/v1/event", controller.CreateEvent)
+	r.PUT("/abix360/admin-event/v1/event", controller.UpdateEvent)
+	r.DELETE("/abix360/admin-event/v1/event/:id", controller.DeleteEvent)
+	r.GET("/abix360/admin-event/v1/event/:id", controller.FindEvent)
 
 	r.Run(":8081")
 }

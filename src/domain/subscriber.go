@@ -8,10 +8,9 @@ type Subscriber struct {
 	updatedAt  string
 }
 
-func NewSubscriber(name, server string) *Subscriber {
+func NewSubscriber(name string) *Subscriber {
 	return &Subscriber{
-		name:   name,
-		server: server,
+		name: name,
 	}
 }
 

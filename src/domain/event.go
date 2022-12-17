@@ -73,6 +73,10 @@ func (e *Event) Update() error {
 	return e.repository.Update(*e)
 }
 
+func (e *Event) Exists() bool {
+	return e.subscriber.name != ""
+}
+
 func ListEvents(repository EventRepository) []Event {
 	return repository.AllEvents()
 }
