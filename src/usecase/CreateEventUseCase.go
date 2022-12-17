@@ -5,6 +5,7 @@ import (
 	"abix360/src/domain"
 	"abix360/src/view/dto"
 	"errors"
+	"fmt"
 )
 
 type CreateEventUseCase struct{}
@@ -16,7 +17,9 @@ func (useCase *CreateEventUseCase) Execute(createEvent dto.EventDto) (code int, 
 		return 202, errors.New("el evento ya existe")
 	}
 
-	event.WithRepository(repository).WithName(createEvent.Name).WithMethod(createEvent.Method)
+	fmt.Println("createEvent.WithToken: ", createEvent.WithToken)
+
+	event.WithRepository(repository).WithName(createEvent.Name).WithMethod(createEvent.Method).WithToken(createEvent.WithToken)
 	event.WithSubscriber(*domain.NewSubscriber(createEvent.Subscriber))
 
 	err = event.Create()

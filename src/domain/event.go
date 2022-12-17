@@ -6,6 +6,7 @@ type Event struct {
 	name       string
 	method     string
 	subscriber Subscriber
+	withToken  bool
 }
 
 func NewEvent(name, method string, subscriber Subscriber) *Event {
@@ -13,6 +14,7 @@ func NewEvent(name, method string, subscriber Subscriber) *Event {
 		name:       name,
 		method:     method,
 		subscriber: subscriber,
+		withToken:  false,
 	}
 }
 
@@ -28,6 +30,11 @@ func (e *Event) WithName(name string) *Event {
 
 func (e *Event) WithMethod(method string) *Event {
 	e.method = method
+	return e
+}
+
+func (e *Event) WithToken(withToken bool) *Event {
+	e.withToken = withToken
 	return e
 }
 
@@ -51,6 +58,10 @@ func (e *Event) Name() string {
 
 func (e *Event) Method() string {
 	return e.method
+}
+
+func (e *Event) HasToken() bool {
+	return e.withToken
 }
 
 func (e *Event) NameSubscriber() string {

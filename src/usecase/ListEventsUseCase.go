@@ -20,6 +20,7 @@ func (useCase *ListEventsUseCase) Execute() []dto.EventDto {
 			Server:     event.ServerSubscriber(),
 			Subscriber: event.NameSubscriber(),
 			Method:     event.Method(),
+			WithToken:  event.HasToken(),
 		})
 	}
 

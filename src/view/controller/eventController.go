@@ -23,6 +23,7 @@ func CreateEvent(c *gin.Context) {
 		Name:       req.Name,
 		Subscriber: req.Subscriber,
 		Method:     req.Method,
+		WithToken:  req.WithToken,
 	})
 
 	if err != nil {
@@ -99,6 +100,7 @@ func UpdateEvent(c *gin.Context) {
 		Subscriber: req.Subscriber,
 		Method:     req.Method,
 		Id:         req.Id,
+		WithToken:  req.WithToken,
 	})
 
 	if err != nil {

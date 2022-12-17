@@ -20,6 +20,7 @@ func (useCase *UpdateEventUseCase) Execute(updateEvent dto.EventDto) (code int, 
 	event.WithName(updateEvent.Name)
 	event.WithMethod(updateEvent.Method)
 	event.WithSubscriber(*domain.NewSubscriber(updateEvent.Subscriber))
+	event.WithToken(updateEvent.WithToken)
 
 	err = event.Update()
 	if err != nil {

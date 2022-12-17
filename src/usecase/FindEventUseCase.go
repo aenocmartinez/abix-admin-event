@@ -22,6 +22,7 @@ func (useCase *FindEventUseCase) Execute(id int64) (dto.EventDto, error) {
 	dtoEvent.Subscriber = event.NameSubscriber()
 	dtoEvent.Server = event.ServerSubscriber()
 	dtoEvent.Id = event.Id()
+	dtoEvent.WithToken = event.HasToken()
 
 	return dtoEvent, nil
 }

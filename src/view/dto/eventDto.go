@@ -6,4 +6,5 @@ type EventDto struct {
 	Subscriber string `json:"subscriber"`
 	Method     string `json:"method"`
 	Server     string `json:"server"`
+	WithToken  bool   `json:"withToken"`
 }
