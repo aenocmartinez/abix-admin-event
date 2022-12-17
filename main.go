@@ -24,5 +24,11 @@ func main() {
 	r.DELETE("/abix360/admin-event/v1/event/:id", controller.DeleteEvent)
 	r.GET("/abix360/admin-event/v1/event/:id", controller.FindEvent)
 
+	// EventManager
+	r.GET("/abix360/admin-event/v1/request", controller.EventManager)
+	r.POST("/abix360/admin-event/v1/request", controller.EventManager)
+	r.PUT("/abix360/admin-event/v1/request", controller.EventManager)
+	r.DELETE("/abix360/admin-event/v1/request", controller.EventManager)
+
 	r.Run(":8081")
 }
