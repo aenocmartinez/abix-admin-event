@@ -1,7 +1,18 @@
 package dto
 
 type EventAdminDto struct {
-	Code  int         `json:"code"`
-	Error error       `json:"error,omitempty"`
-	Data  interface{} `json:"data,omitempty"`
+	Status   string     `json:"status"`
+	Response SuccessDto `json:"response,omitempty"`
+	Error    ErrorDto   `json:"error,omitempty"`
+}
+
+type ErrorDto struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+}
+
+type SuccessDto struct {
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"info,omitempty"`
 }

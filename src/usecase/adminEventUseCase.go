@@ -5,7 +5,6 @@ import (
 	"abix360/src/domain"
 	"abix360/src/view/dto"
 	"encoding/json"
-	"errors"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,8 +16,11 @@ func (useCase *AdminEventUseCase) Execute(c *gin.Context, event string) dto.Even
 	objEvent := domain.FindEventByName(event, repository)
 	if !objEvent.Exists() {
 		return dto.EventAdminDto{
-			Code:  202,
-			Error: errors.New("el evento no existe"),
+			Status: "error",
+			Error: dto.ErrorDto{
+				Code:    202,
+				Message: "el evento no existe",
+			},
 		}
 	}
 	method := domain.MethodFactory(c.Request.Method)
@@ -28,8 +30,11 @@ func (useCase *AdminEventUseCase) Execute(c *gin.Context, event string) dto.Even
 	json.Unmarshal([]byte(strJson), &jsonParsed)
 
 	return dto.EventAdminDto{
-		Code:  200,
-		Data:  jsonParsed,
-		Error: nil,
+		Status: "success",
+		Response: dto.SuccessDto{
+			Code:    200,
+			Message: "sucess",
+			Data:    jsonParsed,
+		},
 	}
 }

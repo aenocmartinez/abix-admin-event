@@ -15,10 +15,10 @@ func EventManager(c *gin.Context) {
 	}
 	useCase := usecase.AdminEventUseCase{}
 	eventAdminDto := useCase.Execute(c, event)
-	if eventAdminDto.Error != nil {
-		c.JSON(eventAdminDto.Code, gin.H{"error": eventAdminDto.Error.Error()})
+	if eventAdminDto.Status == "error" {
+		c.JSON(eventAdminDto.Error.Code, gin.H{"error": eventAdminDto.Error})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"result": eventAdminDto.Data})
+	c.JSON(http.StatusOK, gin.H{"result": eventAdminDto.Response})
 }
