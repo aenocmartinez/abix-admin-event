@@ -13,6 +13,7 @@ func (useCase *FindEventUseCase) Execute(id int64) (dto.EventDto, error) {
 	var dtoEvent dto.EventDto
 	var repository domain.EventRepository = mysql.NewEventDao()
 	event := domain.FindEventById(id, repository)
+	event.WithRepository(repository)
 	if !event.Exists() {
 		return dtoEvent, errors.New("el evento no existe")
 	}

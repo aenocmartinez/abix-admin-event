@@ -3,12 +3,17 @@ package controller
 import (
 	"abix360/src/usecase"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
 func EventManager(c *gin.Context) {
 	event := c.Query("event")
+	if strings.ToLower(c.Request.Method) == "delete" {
+		event = c.Param("event")
+	}
+
 	if len(event) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "el evento es obligatorio"})
 		return

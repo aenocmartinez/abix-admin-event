@@ -6,5 +6,6 @@ type EventRepository interface {
 	Update(event Event) error
 	AllEvents() []Event
 	FindById(id int64) Event
-	FindByName(name string) Event
+	FindByName(event Event) Event
+	Exists(event Event) bool
 }

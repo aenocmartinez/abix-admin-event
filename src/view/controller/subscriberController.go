@@ -27,7 +27,7 @@ func CreateSubscriber(c *gin.Context) {
 }
 
 func DeleteSubscriber(c *gin.Context) {
-	var name string = c.Param("name")
+	var name string = c.Query("name")
 	if len(name) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "parámetro no válido"})
 		return
@@ -50,7 +50,7 @@ func ListSubscribers(c *gin.Context) {
 }
 
 func FindSubscriber(c *gin.Context) {
-	var name string = c.Param("name")
+	var name string = c.Query("name")
 	if len(name) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "parámetro no válido"})
 		return

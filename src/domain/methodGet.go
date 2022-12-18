@@ -14,18 +14,23 @@ type MethodGet struct {
 }
 
 func (g *MethodGet) Invoke(c *gin.Context, event Event) (json string) {
+	fmt.Println("Entra al GET")
 	parameters := g.getParameters(c.Request.URL.Query())
 	url := event.ServerSubscriber() + "/" + event.Name() + "?" + parameters
-	method := "GET"
+
+	fmt.Println("url: ", url)
 
 	client := &http.Client{}
-	req, err := http.NewRequest(method, url, nil)
+	req, err := http.NewRequest("GET", url, nil)
 
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	req.Header.Add("Content-Type", "application/json")
+	if event.HasToken() {
+		req.Header.Set("Authorization", "Bearer "+event.GetTokenRequest(c))
+	}
 
 	res, err := client.Do(req)
 	if err != nil {

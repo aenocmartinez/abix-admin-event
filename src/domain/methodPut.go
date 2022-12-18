@@ -1,6 +1,11 @@
 package domain
 
 import (
+	"bytes"
+	"io"
+	"log"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -8,5 +13,30 @@ type MethodPut struct {
 }
 
 func (g *MethodPut) Invoke(c *gin.Context, event Event) (json string) {
-	return "En Invoke de PUT"
+	bodyPost, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	strURL := event.ServerSubscriber() + "/" + event.Name()
+	request, _ := http.NewRequest("PUT", strURL, bytes.NewReader(bodyPost))
+	request.Header.Set("Content-Type", "application/json")
+
+	if event.HasToken() {
+		request.Header.Set("Authorization", "Bearer "+event.GetTokenRequest(c))
+	}
+
+	client := &http.Client{}
+	response, err := client.Do(request)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	responseData, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return string(responseData)
 }

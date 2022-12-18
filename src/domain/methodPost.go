@@ -2,7 +2,7 @@ package domain
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 
@@ -13,7 +13,7 @@ type MethodPost struct {
 }
 
 func (p *MethodPost) Invoke(c *gin.Context, event Event) (json string) {
-	bodyPost, err := ioutil.ReadAll(c.Request.Body)
+	bodyPost, err := io.ReadAll(c.Request.Body)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -33,7 +33,7 @@ func (p *MethodPost) Invoke(c *gin.Context, event Event) (json string) {
 		log.Fatal(err)
 	}
 
-	responseData, err := ioutil.ReadAll(response.Body)
+	responseData, err := io.ReadAll(response.Body)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -4,6 +4,7 @@ import (
 	"abix360/database"
 	"abix360/src/domain"
 	"bytes"
+	"fmt"
 	"log"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -87,7 +88,8 @@ func (e *EventDao) AllEvents() []domain.Event {
 		var id int64
 		rows.Scan(&id, &name, &subscriber, &method, &server, &withToken)
 
-		var event domain.Event = *domain.NewEvent(name, method, *domain.NewSubscriber(subscriber).WithServer(server)).WithId(id).WithToken(withToken)
+		var event domain.Event = *domain.NewEvent(name, method).WithId(id).WithToken(withToken)
+		event.WithSubscriber(*domain.NewSubscriber(subscriber).WithServer(server))
 		events = append(events, event)
 	}
 
@@ -107,14 +109,15 @@ func (e *EventDao) FindById(id int64) domain.Event {
 
 	row := e.db.Source().Conn().QueryRow(strQuery.String(), id)
 	row.Scan(&id, &name, &subscriber, &method, &server, &withToken)
-	event = *domain.NewEvent(name, method, *domain.NewSubscriber(subscriber).WithServer(server)).WithId(id).WithToken(withToken)
+	event = *domain.NewEvent(name, method).WithId(id).WithToken(withToken)
+	event.WithSubscriber(*domain.NewSubscriber(subscriber).WithServer(server))
 
 	return event
 }
 
-func (e *EventDao) FindByName(name string) domain.Event {
+func (e *EventDao) FindByName(ev domain.Event) domain.Event {
 	var event domain.Event
-	var subscriber, method, server string
+	var name, subscriber, method, server string
 	var id int64
 	var withToken bool
 	var strQuery bytes.Buffer
@@ -122,11 +125,26 @@ func (e *EventDao) FindByName(name string) domain.Event {
 	strQuery.WriteString("SELECT e.id, e.name, e.subscriber, e.method, s.server, e.with_token ")
 	strQuery.WriteString("FROM events e ")
 	strQuery.WriteString("INNER JOIN subscribers s on s.name = e.subscriber ")
-	strQuery.WriteString("WHERE e.name = ?")
+	strQuery.WriteString("WHERE e.name = ? and e.subscriber = ? and e.method = ?")
 
-	row := e.db.Source().Conn().QueryRow(strQuery.String(), name)
+	row := e.db.Source().Conn().QueryRow(strQuery.String(), ev.Name(), ev.ServerSubscriber(), ev.Method())
 	row.Scan(&id, &name, &subscriber, &method, &server, &withToken)
-	event = *domain.NewEvent(name, method, *domain.NewSubscriber(subscriber).WithServer(server)).WithId(id).WithToken(withToken)
+	event = *domain.NewEvent(name, method).WithId(id).WithToken(withToken)
+	event.WithSubscriber(*domain.NewSubscriber(subscriber).WithServer(server))
 
 	return event
+}
+
+func (e *EventDao) Exists(event domain.Event) bool {
+	var exists string = ""
+	var strQuery bytes.Buffer
+	strQuery.WriteString("SELECT 'T' FROM events WHERE name = ? and method = ?")
+
+	row := e.db.Source().Conn().QueryRow(strQuery.String(), event.Name(), event.Method())
+	err := row.Scan(&exists)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return exists != ""
 }

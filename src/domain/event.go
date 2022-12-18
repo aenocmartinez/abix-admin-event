@@ -2,7 +2,7 @@ package domain
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 
@@ -18,12 +18,11 @@ type Event struct {
 	withToken  bool
 }
 
-func NewEvent(name, method string, subscriber Subscriber) *Event {
+func NewEvent(name, method string) *Event {
 	return &Event{
-		name:       name,
-		method:     method,
-		subscriber: subscriber,
-		withToken:  false,
+		name:      name,
+		method:    method,
+		withToken: false,
 	}
 }
 
@@ -94,7 +93,7 @@ func (e *Event) Update() error {
 }
 
 func (e *Event) Exists() bool {
-	return e.subscriber.name != ""
+	return e.repository.Exists(*e)
 }
 
 func (e *Event) HasValidToken(c *gin.Context) bool {
@@ -118,7 +117,7 @@ func (e *Event) HasValidToken(c *gin.Context) bool {
 	}
 	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(res.Body)
+	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println(err)
 		return false
@@ -145,6 +144,6 @@ func FindEventById(id int64, repository EventRepository) Event {
 	return repository.FindById(id)
 }
 
-func FindEventByName(name string, repository EventRepository) Event {
-	return repository.FindByName(name)
+func (event *Event) FindEventByName() Event {
+	return event.repository.FindByName(*event)
 }

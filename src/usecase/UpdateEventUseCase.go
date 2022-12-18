@@ -12,11 +12,12 @@ type UpdateEventUseCase struct{}
 func (useCase *UpdateEventUseCase) Execute(updateEvent dto.EventDto) (code int, err error) {
 	var repository domain.EventRepository = mysql.NewEventDao()
 	event := domain.FindEventById(updateEvent.Id, repository)
+	event.WithRepository(repository)
 	if !event.Exists() {
 		return 202, errors.New("el evento no existe")
 	}
 
-	event.WithRepository(repository).WithId(updateEvent.Id)
+	event.WithId(updateEvent.Id)
 	event.WithName(updateEvent.Name)
 	event.WithMethod(updateEvent.Method)
 	event.WithSubscriber(*domain.NewSubscriber(updateEvent.Subscriber))

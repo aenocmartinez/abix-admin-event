@@ -13,7 +13,9 @@ type AdminEventUseCase struct{}
 
 func (useCase *AdminEventUseCase) Execute(c *gin.Context, event string) dto.EventAdminDto {
 	var repository domain.EventRepository = mysql.NewEventDao()
-	objEvent := domain.FindEventByName(event, repository)
+
+	objEvent := domain.NewEvent(event, c.Request.Method).WithRepository(repository)
+	// objEvent := domain.FindEventByName(event, repository)
 	if !objEvent.Exists() {
 		return dto.EventAdminDto{
 			Status: "error",
@@ -35,7 +37,7 @@ func (useCase *AdminEventUseCase) Execute(c *gin.Context, event string) dto.Even
 	}
 
 	method := domain.MethodFactory(c.Request.Method)
-	strJson := method.Invoke(c, objEvent)
+	strJson := method.Invoke(c, *objEvent)
 
 	var jsonParsed interface{}
 	json.Unmarshal([]byte(strJson), &jsonParsed)
