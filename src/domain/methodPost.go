@@ -20,17 +20,12 @@ func (p *MethodPost) Invoke(c *gin.Context, event Event) (json string) {
 	}
 
 	strURL := event.ServerSubscriber() + "/" + event.Name()
-
 	request, _ := http.NewRequest("POST", strURL, bytes.NewReader(bodyPost))
 	request.Header.Set("Content-Type", "application/json")
 
-	// if e.Authentication() {
-	// 	request.Header.Set("Authorization", "Bearer "+token)
-	// }
-
-	// if e.Authorization() {
-	// 	fmt.Println("Aplica autorizacion a este evento")
-	// }
+	if event.HasToken() {
+		request.Header.Set("Authorization", "Bearer "+event.GetTokenRequest(c))
+	}
 
 	client := &http.Client{}
 	response, err := client.Do(request)

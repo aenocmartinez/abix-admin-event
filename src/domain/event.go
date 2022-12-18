@@ -1,5 +1,14 @@
 package domain
 
+import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
+
+	"github.com/gin-gonic/gin"
+)
+
 type Event struct {
 	repository EventRepository
 	id         int64
@@ -86,6 +95,46 @@ func (e *Event) Update() error {
 
 func (e *Event) Exists() bool {
 	return e.subscriber.name != ""
+}
+
+func (e *Event) HasValidToken(c *gin.Context) bool {
+	token := e.GetTokenRequest(c)
+	url := e.ServerSubscriber() + "/validate-token"
+
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", url, nil)
+
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	return string(body) == "{\"isValid\":true}"
+}
+
+func (e *Event) GetTokenRequest(c *gin.Context) string {
+	const BEARER_SCHEMA = "Bearer "
+	authHeader := c.GetHeader("Authorization")
+	if len(authHeader) == 0 {
+		return ""
+	}
+	tokenString := strings.TrimSpace(authHeader[len(BEARER_SCHEMA):])
+	return tokenString
 }
 
 func ListEvents(repository EventRepository) []Event {

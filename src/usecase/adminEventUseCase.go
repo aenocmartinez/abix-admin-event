@@ -23,6 +23,17 @@ func (useCase *AdminEventUseCase) Execute(c *gin.Context, event string) dto.Even
 			},
 		}
 	}
+
+	if objEvent.HasToken() && !objEvent.HasValidToken(c) {
+		return dto.EventAdminDto{
+			Status: "error",
+			Error: dto.ErrorDto{
+				Code:    401,
+				Message: "Token no válido",
+			},
+		}
+	}
+
 	method := domain.MethodFactory(c.Request.Method)
 	strJson := method.Invoke(c, objEvent)
 
