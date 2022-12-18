@@ -15,7 +15,6 @@ func (useCase *AdminEventUseCase) Execute(c *gin.Context, event string) dto.Even
 	var repository domain.EventRepository = mysql.NewEventDao()
 
 	objEvent := domain.NewEvent(event, c.Request.Method).WithRepository(repository)
-	// objEvent := domain.FindEventByName(event, repository)
 	if !objEvent.Exists() {
 		return dto.EventAdminDto{
 			Status: "error",

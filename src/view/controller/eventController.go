@@ -35,7 +35,7 @@ func CreateEvent(c *gin.Context) {
 }
 
 func DeleteEvent(c *gin.Context) {
-	var strId string = c.Query("id")
+	var strId string = c.Param("id")
 	if len(strId) == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "parámetro no válido"})
 		return
