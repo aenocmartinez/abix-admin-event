@@ -12,7 +12,7 @@ type MethodDelete struct {
 }
 
 func (g *MethodDelete) Invoke(c *gin.Context, event Event) (json string) {
-	strURL := event.ServerSubscriber() + "/" + event.Name()
+	strURL := event.ServerSubscriber() + "/" + event.Name() + "/" + c.Param("id")
 	client := &http.Client{}
 
 	req, err := http.NewRequest("DELETE", strURL, nil)

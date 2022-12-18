@@ -144,6 +144,6 @@ func FindEventById(id int64, repository EventRepository) Event {
 	return repository.FindById(id)
 }
 
-func (event *Event) FindEventByName() Event {
-	return event.repository.FindByName(*event)
+func FindEventByName(name, method string, repository EventRepository) Event {
+	return repository.FindByName(*NewEvent(name, method))
 }

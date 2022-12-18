@@ -14,11 +14,8 @@ type MethodGet struct {
 }
 
 func (g *MethodGet) Invoke(c *gin.Context, event Event) (json string) {
-	fmt.Println("Entra al GET")
 	parameters := g.getParameters(c.Request.URL.Query())
 	url := event.ServerSubscriber() + "/" + event.Name() + "?" + parameters
-
-	fmt.Println("url: ", url)
 
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)

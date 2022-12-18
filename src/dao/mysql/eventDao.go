@@ -125,9 +125,9 @@ func (e *EventDao) FindByName(ev domain.Event) domain.Event {
 	strQuery.WriteString("SELECT e.id, e.name, e.subscriber, e.method, s.server, e.with_token ")
 	strQuery.WriteString("FROM events e ")
 	strQuery.WriteString("INNER JOIN subscribers s on s.name = e.subscriber ")
-	strQuery.WriteString("WHERE e.name = ? and e.subscriber = ? and e.method = ?")
+	strQuery.WriteString("WHERE e.name = ? and e.method = ?")
 
-	row := e.db.Source().Conn().QueryRow(strQuery.String(), ev.Name(), ev.ServerSubscriber(), ev.Method())
+	row := e.db.Source().Conn().QueryRow(strQuery.String(), ev.Name(), ev.Method())
 	row.Scan(&id, &name, &subscriber, &method, &server, &withToken)
 	event = *domain.NewEvent(name, method).WithId(id).WithToken(withToken)
 	event.WithSubscriber(*domain.NewSubscriber(subscriber).WithServer(server))
