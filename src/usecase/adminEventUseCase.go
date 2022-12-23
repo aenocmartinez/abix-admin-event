@@ -31,7 +31,7 @@ func (useCase *AdminEventUseCase) Execute(c *gin.Context, event string) dto.Even
 			Status: "error",
 			Error: dto.ErrorDto{
 				Code:    401,
-				Message: "Token no válido",
+				Message: "Su sesión ha finalizado",
 			},
 		}
 	}

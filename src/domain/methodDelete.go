@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"net/http"
@@ -12,10 +13,11 @@ type MethodDelete struct {
 }
 
 func (g *MethodDelete) Invoke(c *gin.Context, event Event) (json string) {
+	bodyPost, _ := io.ReadAll(c.Request.Body)
 	strURL := event.ServerSubscriber() + "/" + event.Name() + "/" + c.Param("id")
 	client := &http.Client{}
 
-	req, err := http.NewRequest("DELETE", strURL, nil)
+	req, err := http.NewRequest("DELETE", strURL, bytes.NewReader(bodyPost))
 	if err != nil {
 		fmt.Println(err)
 		return

@@ -98,7 +98,8 @@ func (e *Event) Exists() bool {
 
 func (e *Event) HasValidToken(c *gin.Context) bool {
 	token := e.GetTokenRequest(c)
-	url := e.ServerSubscriber() + "/validate-token"
+	// url := e.ServerSubscriber() + "/validate-token"
+	url := "http://localhost:8080/abix360/v1" + "/validate-token"
 
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
