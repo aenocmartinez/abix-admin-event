@@ -1,10 +1,11 @@
 package usecase
 
 import (
-	"abix360/src/dao/mysql"
-	"abix360/src/domain"
-	"abix360/src/view/dto"
 	"encoding/json"
+	"pulzo/src/dao/mysql"
+	"pulzo/src/domain"
+	"pulzo/src/infraestructure/jwt"
+	"pulzo/src/view/dto"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,7 +27,7 @@ func (useCase *AdminEventUseCase) Execute(c *gin.Context, event string) dto.Even
 		}
 	}
 
-	if objEvent.HasToken() && !objEvent.HasValidToken(c) {
+	if objEvent.HasToken() && !jwt.ValidateToken(c) {
 		return dto.EventAdminDto{
 			Status: "error",
 			Error: dto.ErrorDto{

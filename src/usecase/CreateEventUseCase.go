@@ -1,10 +1,10 @@
 package usecase
 
 import (
-	"abix360/src/dao/mysql"
-	"abix360/src/domain"
-	"abix360/src/view/dto"
 	"errors"
+	"pulzo/src/dao/mysql"
+	"pulzo/src/domain"
+	"pulzo/src/view/dto"
 )
 
 type CreateEventUseCase struct{}

@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"abix360/src/usecase"
-	"abix360/src/view/dto"
-	formrequest "abix360/src/view/form-request"
 	"net/http"
+	"pulzo/src/usecase"
+	"pulzo/src/view/dto"
+	formrequest "pulzo/src/view/form-request"
 	"strconv"
 
 	"github.com/gin-gonic/gin"

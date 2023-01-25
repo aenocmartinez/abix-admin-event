@@ -1,9 +1,6 @@
 package domain
 
 import (
-	"fmt"
-	"io"
-	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -96,35 +93,43 @@ func (e *Event) Exists() bool {
 	return e.repository.Exists(*e)
 }
 
-func (e *Event) HasValidToken(c *gin.Context) bool {
-	token := e.GetTokenRequest(c)
-	// url := e.ServerSubscriber() + "/validate-token"
-	url := "http://localhost:8080/abix360/v1" + "/validate-token"
+func (e *Event) HasValidToken(c *gin.Context, repository UserRepository) bool {
+	// token := jwt.GetTokenRequest(c)
+	// if !jwt.VerifyToken(token) {
+	// 	return false
+	// }
 
-	client := &http.Client{}
-	req, err := http.NewRequest("GET", url, nil)
+	return true
+	// user := repository.FindByToken(token)
+	// return user.Exists()
 
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+token)
+	// token := e.GetTokenRequest(c)
+	// url := "http://localhost:8080/pulzo/v1" + "/validate-token"
 
-	res, err := client.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-	defer res.Body.Close()
+	// client := &http.Client{}
+	// req, err := http.NewRequest("GET", url, nil)
 
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return false
+	// }
+	// req.Header.Add("Content-Type", "application/json")
+	// req.Header.Set("Authorization", "Bearer "+token)
 
-	return string(body) == "{\"isValid\":true}"
+	// res, err := client.Do(req)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return false
+	// }
+	// defer res.Body.Close()
+
+	// body, err := io.ReadAll(res.Body)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return false
+	// }
+
+	// return string(body) == "{\"isValid\":true}"
 }
 
 func (e *Event) GetTokenRequest(c *gin.Context) string {

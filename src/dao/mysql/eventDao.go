@@ -1,11 +1,11 @@
 package mysql
 
 import (
-	"abix360/database"
-	"abix360/src/domain"
 	"bytes"
 	"fmt"
 	"log"
+	"pulzo/database"
+	"pulzo/src/domain"
 
 	_ "github.com/go-sql-driver/mysql"
 )

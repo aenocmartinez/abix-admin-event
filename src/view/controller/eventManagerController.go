@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"abix360/src/usecase"
 	"net/http"
+	"pulzo/src/usecase"
 	"strings"
 
 	"github.com/gin-gonic/gin"

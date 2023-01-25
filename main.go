@@ -1,34 +1,60 @@
 package main
 
 import (
-	"abix360/src/view/controller"
+	"net/http"
+	"pulzo/src/infraestructure/jwt"
+	"pulzo/src/view/controller"
 
 	"github.com/gin-gonic/gin"
 )
 
+func validateHeader() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		contentType := c.GetHeader("Content-Type")
+		if contentType != "application/json" {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "header no valid"})
+		}
+		c.Next()
+	}
+}
+
 func main() {
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
+	r.POST("/pulzo/v1/register", controller.Register)
+	r.POST("/pulzo/v1/login", controller.Login)
+	r.GET("/pulzo/v1/validate-token", controller.ValidatedToken)
 
-	// Subscriber
-	r.GET("/abix360/admin-event/v1/subscribers", controller.ListSubscribers)
-	r.POST("/abix360/admin-event/v1/subscriber", controller.CreateSubscriber)
-	r.DELETE("/abix360/admin-event/v1/subscriber", controller.DeleteSubscriber)
-	r.GET("/abix360/admin-event/v1/subscriber", controller.FindSubscriber)
+	routes := r.Group("/pulzo/v1", validateHeader(), jwt.AuthorizeJWT())
+	{
+		routes.POST("/logout", controller.Logout)
+		routes.PUT("/reset-password", controller.ResetPassword)
+		routes.PUT("/update-info-personal", controller.UpdateInfoPersonal)
+		routes.GET("/user/:id", controller.FindUser)
+		routes.GET("/inactivate/:id", controller.InactivateUser)
+		routes.GET("/users", controller.AllUsers)
+		routes.GET("/activate-user/:id", controller.ActivateUser)
 
-	// Events
-	r.GET("/abix360/admin-event/v1/events", controller.ListEvents)
-	r.POST("/abix360/admin-event/v1/event", controller.CreateEvent)
-	r.PUT("/abix360/admin-event/v1/event", controller.UpdateEvent)
-	r.DELETE("/abix360/admin-event/v1/event/:id", controller.DeleteEvent)
-	r.GET("/abix360/admin-event/v1/event", controller.FindEvent)
+		// Subscriber
+		routes.GET("/subscribers", controller.ListSubscribers)
+		routes.POST("/subscriber", controller.CreateSubscriber)
+		routes.DELETE("/subscriber", controller.DeleteSubscriber)
+		routes.GET("/subscriber", controller.FindSubscriber)
 
-	// EventManager
-	r.GET("/abix360/admin-event/v1/request", controller.EventManager)
-	r.POST("/abix360/admin-event/v1/request", controller.EventManager)
-	r.PUT("/abix360/admin-event/v1/request", controller.EventManager)
-	r.DELETE("/abix360/admin-event/v1/request/:event/:id", controller.EventManager)
+		// Events
+		routes.GET("/events", controller.ListEvents)
+		routes.POST("/event", controller.CreateEvent)
+		routes.PUT("/event", controller.UpdateEvent)
+		routes.DELETE("/event/:id", controller.DeleteEvent)
+		routes.GET("/event", controller.FindEvent)
 
-	r.Run(":8081")
+		// EventManager
+		routes.GET("/request", controller.EventManager)
+		routes.POST("/request", controller.EventManager)
+		routes.PUT("/request", controller.EventManager)
+		routes.DELETE("/request/:event/:id", controller.EventManager)
+	}
+
+	r.Run(":8080")
 }

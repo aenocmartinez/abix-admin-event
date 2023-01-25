@@ -1,10 +1,10 @@
 package database
 
 import (
-	"abix360/shared"
 	"database/sql"
 	"log"
 	"os"
+	"pulzo/shared"
 	"sync"
 
 	"gopkg.in/yaml.v2"
